@@ -14,6 +14,15 @@ class SendWelcomeEmail implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+//    public $timeout = 1;
+    public $tries = -1;//una dupa alta
+    public $backoff = 2;//time between one try and other
+
+    /**
      * Create a new job instance.
      *
      * @return void
@@ -30,8 +39,15 @@ class SendWelcomeEmail implements ShouldQueue
      */
     public function handle()
     {
+        throw new \Exception('Failed!');
+
         sleep(3);
 
         info('Hello!');
+    }
+
+    public function retryUntil()
+    {
+        return now()->addMinute();
     }
 }
