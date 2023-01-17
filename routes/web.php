@@ -14,7 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    \App\Jobs\SendWelcomeEmail::dispatch();
+    $chain = [ // if we want to reproduce multiple jobs one at time we can use that way to the things
+        new \App\Jobs\SendWelcomeEmail(),
+        new \App\Jobs\ProcessPayment()
+    ];
+
+    \Illuminate\Support\Facades\Bus::chain($chain)->dispatch();
 
     return view('welcome');
 });

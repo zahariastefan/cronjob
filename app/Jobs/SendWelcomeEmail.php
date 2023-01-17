@@ -35,9 +35,8 @@ class SendWelcomeEmail implements ShouldQueue
      */
     public function handle()
     {
-        throw new \Exception('Failed');
-        return $this->release(); //now the queue:work will try 3 times to do the job, but this release say to the worker
-        // that he have to do the job again after 2 times but that is impossible because we have only 3 tries so it FAILED!
+        throw new \Exception('Fail');
+        info('Worked!');
     }
 
     public function failed($e)
