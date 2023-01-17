@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 class SendWelcomeEmail implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 10;
     public $maxExceptions = 2; // that means that we can have 10 tries but ONLY TWO of them can be Exception!
@@ -35,7 +36,10 @@ class SendWelcomeEmail implements ShouldQueue
      */
     public function handle()
     {
-        throw new \Exception('Fail');
+        if($this->batch()->canceled()) {
+            return;
+        }
+//        throw new \Exception('Fail');
         info('Worked!');
     }
 

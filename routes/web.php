@@ -14,12 +14,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    $chain = [ // if we want to reproduce multiple jobs one at time we can use that way to the things
-        new \App\Jobs\SendWelcomeEmail(),
-        new \App\Jobs\ProcessPayment()
+    $batch = [ // if we want to reproduce multiple jobs one at time we can use that way to the things
+        new \App\Jobs\SendWelcomeEmail('laracasts/project1'),
+        new \App\Jobs\SendWelcomeEmail('laracasts/project2'),
+        new \App\Jobs\SendWelcomeEmail('laracasts/project3'),
     ];
 
-    \Illuminate\Support\Facades\Bus::chain($chain)->dispatch();
+    \Illuminate\Support\Facades\Bus::batch($batch)
+        ->allowFailures()
+        ->dispatch(); //php artisan queue:batches-table
 
     return view('welcome');
 });
